@@ -6,7 +6,7 @@ import pandas as pd
 
 
 def filter_emoji(desstr, restr=' '):
-    # 过滤emoji
+    # Filter emoji
     try:
         co = re.compile(u'[\U00010000-\U0010ffff]')
     except re.error:
@@ -26,20 +26,24 @@ def sep_words():
     jieba.load_userdict("/Users/chensx/Desktop/大学/毕业设计文献/THUOCL/THUOCL_it.txt")
     jieba.suggest_freq("下单", True)
     jieba.suggest_freq("WiFi", True)
+    # Read review data
     with open("review_crawler/review.csv", 'r') as fp:
         sentence_list = fp.readlines()
+        # Skip column name
         sentence_list = sentence_list[1:]
         for sentence in sentence_list:
             sentence = sentence.rstrip('\n')
             sentence = filter_emoji(sentence)
             sentence_after = jieba.cut(sentence, cut_all=False)
             outstr = ''
+            # If word in stopwords, delete
             for word in sentence_after:
                 if word not in stopwords:
                     outstr += word
                     outstr += ' '
             sentence_after_list.append(outstr.rstrip())
 
+    # Write into csv
     data = pd.read_csv('review_crawler/review.csv')
     data = pd.DataFrame(data)
     data['after_treatment'] = sentence_after_list

@@ -28,14 +28,16 @@ class review(object):
         num = 0
         while num < 20:
             sleep(3)
-            self.driver.execute_script("window.scrollBy(0,10000)")
+            # Stimulate scrolling
             i = 0
             while i < 4:
                 self.driver.find_element_by_tag_name("body").send_keys(Keys.SPACE)
                 i += 1
+            # Get review texts
             review_list = self.driver.find_elements_by_class_name("tm-col-master")
             for review in review_list:
                 text = str(review.find_element_by_class_name("tm-rate-fulltxt").text)
+                # Write into csv
                 with open("review.csv", 'a') as fp:
                     fp_csv = csv.writer(fp)
                     fp_csv.writerow([text])
@@ -52,6 +54,7 @@ class review(object):
     def login(self):
         self.init()
         self.driver.get(url=self.login_url)
+        # Wait login certification
         input("请回车输入")
         self.dict_cookies = self.driver.get_cookies()
         self.json_cookies = json.dumps(self.dict_cookies)
