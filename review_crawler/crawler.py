@@ -14,8 +14,6 @@ class review(object):
             'Accept-Language': 'zh-CN,zh;q=0.9',
             'Connection': 'keep-alive',
             'Referer': 'https://detail.tmall.com/item.htm?spm=a230r.1.14.9.76f96228yVEeeJ&id=602659642364&cm_id=140105335569ed55e27b&abbucket=1',
-            'sec-fetch-mode': 'navigate',
-            'sec-fetch-mode': 'sec-fetch-mode',
             'Upgrade-Insecure-Requests': '1',
             'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.92 Safari/537.36',
         }
@@ -30,7 +28,7 @@ class review(object):
         num = 0
         while num < 20:
             sleep(3)
-            self.driver.execute_script("window.scrollBy(0,1000)")
+            self.driver.execute_script("window.scrollBy(0,10000)")
             i = 0
             while i < 4:
                 self.driver.find_element_by_tag_name("body").send_keys(Keys.SPACE)
@@ -43,8 +41,13 @@ class review(object):
                     fp_csv.writerow([text])
                 print(text)
             sleep(3)
-            self.driver.find_element_by_link_text("下一页>>").click()
-            num += 1
+            try:
+                self.driver.find_element_by_link_text("下一页>>").click()
+                num += 1
+            except:
+                self.driver.close()
+                break
+        self.driver.close()
 
     def login(self):
         self.init()
@@ -60,4 +63,3 @@ class review(object):
 if __name__ == '__main__':
     get_review = review()
     get_review.login()
-    get_review.driver.close()
