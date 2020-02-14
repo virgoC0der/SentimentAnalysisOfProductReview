@@ -7,7 +7,7 @@ import json
 
 class review(object):
     def init_driver(self):
-        self.url = "https://login.tmall.com/?spm=a220o.1000855.a2226mz.2.d68c18ceHaXU1B&redirectURL=https%3A%2F%2Fdetail.tmall.com%2Fitem.htm%3Fspm%3Da230r.1.14.16.4a215268A7BmEj%26id%3D589346193955%26cm_id%3D140105335569ed55e27b%26abbucket%3D6"
+        self.url = "https://login.tmall.com/?spm=a220o.1000855.a2226mz.2.6f0c63a4EkWuHW&redirectURL=https%3A%2F%2Fdetail.tmall.com%2Fitem.htm%3Fspm%3Da230r.1.14.3.15f41b11tbUO20%26id%3D561498041581%26ns%3D1%26abbucket%3D15"
         self.path = "/Users/chensx/Desktop/graduation_project/chromedriver"
         self.driver = webdriver.Chrome(executable_path=self.path)
 
@@ -16,9 +16,9 @@ class review(object):
         self.driver.get(url=self.url)
         # Wait login certification
         input("请回车输入")
-        self.dict_cookies = self.driver.get_cookies()
-        self.json_cookies = json.dumps(self.dict_cookies)
-        print(self.dict_cookies)
+        # self.dict_cookies = self.driver.get_cookies()
+        # self.json_cookies = json.dumps(self.dict_cookies)
+        # print(self.dict_cookies)
         self.get_review()
 
     def get_review(self):
@@ -28,7 +28,7 @@ class review(object):
         # DataFrame for writing into csv
         review_data_list = pd.DataFrame(columns=['text'])
 
-        while num < 10:
+        while num < 20:
             sleep(3)
             # Stimulate scrolling
             self.scroll()
