@@ -7,7 +7,7 @@ import json
 
 class review(object):
     def init_driver(self):
-        self.url = "https://login.tmall.com/?spm=a220o.1000855.a2226mz.2.6f0c63a4EkWuHW&redirectURL=https%3A%2F%2Fdetail.tmall.com%2Fitem.htm%3Fspm%3Da230r.1.14.3.15f41b11tbUO20%26id%3D561498041581%26ns%3D1%26abbucket%3D15"
+        self.url = "https://detail.tmall.com/item.htm?spm=a220m.1000858.1000725.2.23214f68QQOUjC&id=589880871893&skuId=4200907042830&standard=1&user_id=2616970884&cat_id=2&is_b=1&rn=1b1d09e8340c83f0d4244c7119db9893"
         self.path = "/Users/chensx/Desktop/graduation_project/chromedriver"
         self.driver = webdriver.Chrome(executable_path=self.path)
 
@@ -36,7 +36,7 @@ class review(object):
             review_list = self.driver.find_elements_by_class_name("tm-col-master")
             for review in review_list:
                 text = str(review.find_element_by_class_name("tm-rate-fulltxt").text)
-                if text != "此用户没有填写评论!":
+                if text != "此用户没有填写评论!" and len(text) > 5:
                     review_data_list = review_data_list.append({'text': text}, ignore_index=True)
                     print(text)
             try:
