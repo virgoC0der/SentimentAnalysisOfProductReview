@@ -11,7 +11,7 @@ def train():
     #     f_csv = csv.writer(f)
     #     for i in discuss_train:
     #         f_csv.writerow([str(i)])
-    sentences = word2vec.Text8Corpus('review_crawler/train_cut.csv')
+    sentences = word2vec.Text8Corpus('train_cut.csv')
     model = word2vec.Word2Vec(sentences, size=200)
 
     model.save("word2vec.model")
