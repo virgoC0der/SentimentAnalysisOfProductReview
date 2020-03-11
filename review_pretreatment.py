@@ -5,7 +5,7 @@ import pandas as pd
 
 
 # Filter emoji
-def filter_emoji(desstr, restr=' '):
+def emoji_filter(desstr, restr=' '):
     try:
         co = re.compile(u'[\U00010000-\U0010ffff]')
     except re.error:
@@ -30,7 +30,7 @@ def sep_words():
     sentence_list = sentence_csv['text']
     for sentence in sentence_list:
         sentence = sentence.rstrip('\n')
-        sentence = filter_emoji(sentence)
+        sentence = emoji_filter(sentence)
         sentence_after = jieba.cut(sentence, cut_all=False)
         outstr = ''
         # If word in stopwords, delete

@@ -2,8 +2,6 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from time import sleep
 import pandas as pd
-import json
-
 
 class review(object):
     def init_driver(self):
@@ -16,9 +14,6 @@ class review(object):
         self.driver.get(url=self.url)
         # Wait login certification
         input("请回车输入")
-        # self.dict_cookies = self.driver.get_cookies()
-        # self.json_cookies = json.dumps(self.dict_cookies)
-        # print(self.dict_cookies)
         self.get_review()
 
     def get_review(self):
