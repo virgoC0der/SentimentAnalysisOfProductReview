@@ -26,7 +26,7 @@ def sep_words():
     jieba.suggest_freq("下单", True)
     jieba.suggest_freq("WiFi", True)
     # Read review data
-    sentence_csv = pd.read_csv('../review_crawler/review.csv', index_col=0)
+    sentence_csv = pd.read_csv('review_crawler/review.csv', index_col=0)
     sentence_list = sentence_csv['text']
     for sentence in sentence_list:
         sentence = sentence.rstrip('\n')
@@ -42,7 +42,7 @@ def sep_words():
         sentence_treated_list.append(outstr.rstrip())
 
     # Write into csv
-    data = pd.read_csv('../review_crawler/review.csv', encoding='utf-8')
+    data = pd.read_csv('review_crawler/review.csv', encoding='utf-8')
     data['after_treatment'] = sentence_treated_list
     data.to_csv('review_crawler/review.csv', encoding='utf-8', index=False)
 

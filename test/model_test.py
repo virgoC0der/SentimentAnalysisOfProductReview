@@ -2,7 +2,7 @@ from gensim.models import word2vec
 from gensim import models
 
 def test():
-    model = models.Word2Vec.load('word2vec.model')
+    model = models.Word2Vec.load('comment_text.model')
 
     print("提供 3 種測試模式\n")
     print("輸入一個詞，則去尋找前一百個該詞的相似詞")
