@@ -5,7 +5,7 @@ import pandas as pd
 
 class review(object):
     def init_driver(self):
-        self.url = "https://detail.tmall.com/item.htm?spm=a220m.1000858.1000725.2.23214f68QQOUjC&id=589880871893&skuId=4200907042830&standard=1&user_id=2616970884&cat_id=2&is_b=1&rn=1b1d09e8340c83f0d4244c7119db9893"
+        self.url = "https://login.tmall.com/?redirectURL=https%3A%2F%2Fdetail.tmall.com%2Fitem.htm%3Fspm%3Da220m.1000858.1000725.2.72e5234eJzpRWt%26id%3D41676759674%26skuId%3D4116255300324%26areaId%3D370200%26user_id%3D745949152%26cat_id%3D2%26is_b%3D1%26rn%3D981639684d273b49cfbc2c4fdc3941d2"
         self.path = "/Users/chensx/Desktop/graduation_project/chromedriver"
         self.driver = webdriver.Chrome(executable_path=self.path)
 

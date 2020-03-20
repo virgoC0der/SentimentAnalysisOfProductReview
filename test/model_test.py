@@ -25,7 +25,7 @@ def test():
                 res = model.similarity(q_list[0], q_list[1])
                 print(res)
             else:
-                print("%s之于%s，如%s之于" % (q_list[0], q_list[2], q_list[1]))
+                print("%s一定%s，不一定%s" % (q_list[0], q_list[2], q_list[1]))
                 res = model.wv.most_similar([q_list[0], q_list[1]], [q_list[2]], topn=100)
                 for item in res:
                     print(item[0] + "," + str(item[1]))

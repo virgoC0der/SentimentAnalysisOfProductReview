@@ -32,11 +32,15 @@ import multiprocessing
 #     train()
 
 if __name__ == '__main__':
-    # print open('/Users/sy/Desktop/pyRoot/wiki_zh_vec/cmd.txt').readlines()
-    # sys.exit()
-
     program = os.path.basename(sys.argv[0])
     logger = logging.getLogger(program)
+
+    df_train = pd.read_csv('review_crawler/review.csv')
+    discuss_train = list(df_train['after_treatment'])
+    with open('train_cut.csv', 'w') as f:
+        f_csv = csv.writer(f)
+        for i in discuss_train:
+            f_csv.writerow([str(i)])
 
     logging.basicConfig(format='%(asctime)s: %(levelname)s: %(message)s', level=logging.INFO)
     logger.info("running %s" % ' '.join(sys.argv))
