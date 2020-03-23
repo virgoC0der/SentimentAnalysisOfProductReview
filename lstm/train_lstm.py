@@ -1,11 +1,8 @@
 import yaml
-import sys
-# reload(sys)
-# sys.setdefaultencoding('utf8')
 from sklearn.model_selection import train_test_split
 import multiprocessing
 import numpy as np
-from gensim.models.word2vec import Word2Vec
+from gensim.models import Word2Vec
 from gensim.corpora.dictionary import Dictionary
 
 from keras.preprocessing import sequence
@@ -166,18 +163,18 @@ def input_transform(string):
     words=jieba.lcut(string)
     print(words)
     words=np.array(words).reshape(1,-1)
-    model=Word2Vec.load('../data/Word2vec_model.pkl')
+    model=Word2Vec.load('../model/Word2vec_model.pkl')
     _,_,combined=create_dictionaries(model,words)
     return combined
 
 def lstm_predict(string):
     print ('loading model......')
-    with open('../data/lstm.yml', 'r') as f:
+    with open('../model/lstm.yml', 'r') as f:
         yaml_string = yaml.load(f)
     model = model_from_yaml(yaml_string)
 
     print ('loading weights......')
-    model.load_weights('../data/lstm_new.h5')
+    model.load_weights('../model/lstm_new.h5')
     model.compile(loss='binary_crossentropy',
                   optimizer='adam',metrics=['accuracy'])
     data=input_transform(string)
