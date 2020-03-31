@@ -161,7 +161,6 @@ def train():
 
 def input_transform(string):
     words=jieba.lcut(string)
-    print(words)
     words=np.array(words).reshape(1,-1)
     model=Word2Vec.load('../model/Word2vec_model.pkl')
     _,_,combined=create_dictionaries(model,words)
@@ -189,11 +188,11 @@ def lstm_predict(string):
 if __name__=='__main__':
     # train()
     #string='电池充完了电连手机都打不开.简直烂的要命.真是金玉其外,败絮其中!连5号电池都不如'
-    string='再也不来吃了'
+    # string='真特么难吃'
     # string='酒店的环境非常好，价格也便宜，值得推荐'
     # string='手机质量太差了，傻逼店家，赚黑心钱，以后再也不会买了'
     # string='我是傻逼'
-    # string='你是傻逼'
+    string='你是傻逼'
     # string='屏幕较差，拍照也很粗糙。'
     # string='质量不错，是正品 ，安装师傅也很好，才要了83元材料费'
     # string='东西非常不错，安装师傅很负责人，装的也很漂亮，精致，谢谢安装师傅！'
