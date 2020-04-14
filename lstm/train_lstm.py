@@ -66,8 +66,6 @@ def create_dictionaries(model=None,
         w2vec = {word: model[word] for word in w2indx.keys()}       #所有频数超过10的词语的词向量
 
         def parse_dataset(combined):
-            ''' Words become integers
-            '''
             data=[]
             for sentence in combined:
                 new_txt = []
@@ -162,13 +160,11 @@ def train():
 def input_transform(string):
     words=jieba.lcut(string)
     words=np.array(words).reshape(1,-1)
-    print(words)
     model=Word2Vec.load('../model/Word2vec_model.pkl')
     _,_,combined=create_dictionaries(model,words)
-    print(combined)
     return combined
 
-def lstm_predict(string):
+def lstm_predict():
     print ('loading model......')
     with open('../model/lstm.yml', 'r') as f:
         yaml_string = yaml.load(f)
@@ -178,24 +174,41 @@ def lstm_predict(string):
     model.load_weights('../model/lstm_new.h5')
     model.compile(loss='binary_crossentropy',
                   optimizer='adam',metrics=['accuracy'])
-    data = input_transform(string)
-    data.reshape(1,-1)
-    result = model.predict_classes(data)
-    if result[0][0]==1:
-        print (string,' positive')
-        return 1
-    else:
-        print (string,' negative')
-        return 0
-
-if __name__=='__main__':
-    review_csv = pd.read_csv("../data/test_set.csv", encoding='utf-8')
+    review_csv = pd.read_csv("../data/res_comment.csv", encoding='utf-8')
     review_list = review_csv['text']
+    result_list = review_csv['sentiment']
+    wrong_list = []
     wrong_ans = 0
     for i in range(0, 100):
-        result = lstm_predict(review_list[i])
-        if result == 1:
-            wrong_ans += 1
+        data = input_transform(review_list[i])
+        data.reshape(1,-1)
+        result = model.predict_classes(data)
+        if result[0][0] == 1:
+            if result_list[i] == 'positive':
+                print (review_list[i],' positive')
+            else:
+                wrong_ans += 1
+                wrong_list.append(review_list[i])
+        else:
+            if result_list[i] == 'negative':
+                print (review_list[i],' negative')
+            else:
+                wrong_ans += 1
+                wrong_list.append(review_list[i])
 
+    print(wrong_list)
     accuracy = (100-wrong_ans)/100
     print("accuracy: %f" % (accuracy))
+
+if __name__=='__main__':
+    # review_csv = pd.read_csv("../data/res_comment.csv", encoding='utf-8')
+    # review_list = review_csv['text']
+    # result_list = review_csv['sentiment']
+    # wrong_list = []
+    # wrong_ans = 0
+    # for i in range(0, 100):
+    #     pre_result = lstm_predict(review_list[i])
+    #     if pre_result != result_list[i]:
+    #         wrong_ans += 1
+    #         wrong_list.append(review_list[i])
+    lstm_predict()
