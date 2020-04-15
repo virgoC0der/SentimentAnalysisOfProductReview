@@ -164,16 +164,31 @@ def input_transform(string):
     _,_,combined=create_dictionaries(model,words)
     return combined
 
-def lstm_predict():
-    print ('loading model......')
+def load_model():
+    print('loading model......')
     with open('../model/lstm.yml', 'r') as f:
         yaml_string = yaml.load(f)
     model = model_from_yaml(yaml_string)
 
-    print ('loading weights......')
+    print('loading weights......')
     model.load_weights('../model/lstm_new.h5')
     model.compile(loss='binary_crossentropy',
-                  optimizer='adam',metrics=['accuracy'])
+                  optimizer='adam', metrics=['accuracy'])
+    return model
+
+def lstm_predict_single(string):
+    model = load_model()
+    data = input_transform(string)
+    data.reshape(1, -1)
+    result = model.predict_classes(data)
+    if result[0][0] == 1:
+        print(string, ' positive')
+    else:
+        print(string, ' negative')
+
+
+def lstm_predict():
+    model = load_model()
     review_csv = pd.read_csv("../data/res_comment.csv", encoding='utf-8')
     review_list = review_csv['text']
     result_list = review_csv['sentiment']
@@ -201,14 +216,6 @@ def lstm_predict():
     print("accuracy: %f" % (accuracy))
 
 if __name__=='__main__':
-    # review_csv = pd.read_csv("../data/res_comment.csv", encoding='utf-8')
-    # review_list = review_csv['text']
-    # result_list = review_csv['sentiment']
-    # wrong_list = []
-    # wrong_ans = 0
-    # for i in range(0, 100):
-    #     pre_result = lstm_predict(review_list[i])
-    #     if pre_result != result_list[i]:
-    #         wrong_ans += 1
-    #         wrong_list.append(review_list[i])
-    lstm_predict()
+    # lstm_predict()
+    string = "肉时间长，不新鲜，味道差劲，不好吃，服务员告诉我说，套餐就这样，肉品差，要想吃新鲜肉，就得单独再点贵的"
+    lstm_predict_single(string)
