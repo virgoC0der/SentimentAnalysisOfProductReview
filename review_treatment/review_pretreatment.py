@@ -18,6 +18,17 @@ def stopwords_list():
                  open('/Users/chensx/Downloads/stopwords/哈工大停用词表.txt', encoding='utf-8').readlines()]
     return stopwords
 
+def sep_string(sentence):
+    stopwords = stopwords_list()
+    sentence = sentence.rstrip('\n')
+    sentence = emoji_filter(sentence)
+    sentence = jieba.lcut(sentence)
+    out_str = []
+    for word in sentence:
+        if word not in stopwords and word != ' ':
+            out_str.append(word)
+    return out_str
+
 
 def sep_words():
     sentence_treated_list = []
