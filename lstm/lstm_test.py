@@ -35,7 +35,7 @@ def lstm_predict_single(string):
     if result[0] == 1:
         print(string, ' positive')
     elif result[0] == 0:
-        print(string, 'neural')
+        print(string, 'neutral')
     else:
         print(string, ' negative')
 
@@ -58,8 +58,8 @@ def lstm_predict():
                 wrong_ans += 1
                 wrong_list.append(review_list[i])
         elif result[0] == 0:
-            if result_list[i] == 'neural':
-                print (review_list[i],' neural')
+            if result_list[i] == 'neutral':
+                print (review_list[i],' neutral')
             else:
                 wrong_ans += 1
                 wrong_list.append(review_list[i])
