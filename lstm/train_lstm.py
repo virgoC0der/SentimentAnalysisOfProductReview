@@ -11,6 +11,7 @@ from keras.layers.embeddings import Embedding
 from keras.layers.recurrent import LSTM
 from keras.layers.core import Dense, Dropout,Activation
 from keras.models import model_from_yaml
+from keras.utils import to_categorical
 np.random.seed(1337)  # For Reproducibility
 import jieba
 import pandas as pd
@@ -30,11 +31,12 @@ cpu_count = multiprocessing.cpu_count()
 
 #加载训练文件
 def loadfile():
-    neg=pd.read_excel('../data/neg.xls',header=None,index=None)
-    pos=pd.read_excel('../data/pos.xls',header=None,index=None)
+    neg=pd.read_csv('../data/neg.csv',header=None,index_col=None)
+    pos=pd.read_csv('../data/pos.csv',header=None,index_col=None,error_bad_lines=False)
+    neu=pd.read_csv('../data/neutral.csv', header=None, index_col=None)
 
-    combined=np.concatenate((pos[0], neg[0]))
-    y = np.concatenate((np.ones(len(pos),dtype=int), np.zeros(len(neg),dtype=int)))
+    combined=np.concatenate((pos[0], neg[0], neu[0]))
+    y = np.concatenate((np.ones(len(pos),dtype=int), np.zeros(len(neu), dtype=int), -1*np.ones(len(neg),dtype=int)))
 
     return combined,y
 
@@ -103,7 +105,11 @@ def get_data(index_dict,word_vectors,combined,y):
     embedding_weights = np.zeros((n_symbols, vocab_dim))        #索引为0的词语，词向量全为0
     for word, index in index_dict.items():                      #从索引为1的词语开始，对每个词语对应其词向量
         embedding_weights[index, :] = word_vectors[word]
+    print(combined)
+    print(y)
     x_train, x_test, y_train, y_test = train_test_split(combined, y, test_size=0.2)
+    y_train = to_categorical(y_train, num_classes=3)
+    y_test = to_categorical(y_test, num_classes=3)
     print(x_train.shape,y_train.shape)
     return n_symbols,embedding_weights,x_train,y_train,x_test,y_test
 
@@ -117,10 +123,10 @@ def train_lstm(n_symbols,embedding_weights,x_train,y_train,x_test,y_test):
                         mask_zero=True,
                         weights=[embedding_weights],
                         input_length=input_length))             # Adding Input Length
-    model.add(LSTM(output_dim=50, activation='sigmoid', inner_activation='hard_sigmoid'))
+    model.add(LSTM(output_dim=50, activation='tanh'))
     model.add(Dropout(0.5))
-    model.add(Dense(1))
-    model.add(Activation('sigmoid'))
+    model.add(Dense(3, activation='softmax'))
+    model.add(Activation('softmax'))
 
     print ('Compiling the Model...')
     model.compile(loss='binary_crossentropy',
@@ -136,7 +142,7 @@ def train_lstm(n_symbols,embedding_weights,x_train,y_train,x_test,y_test):
     yaml_string = model.to_yaml()
     with open('../model/lstm.yml', 'w') as outfile:
         outfile.write( yaml.dump(yaml_string, default_flow_style=True) )
-    model.save_weights('../model/lstm_new.h5')
+    model.save_weights('../model/lstm_three.h5')
     print('Test score:', score)
 
 
@@ -171,7 +177,7 @@ def load_model():
     model = model_from_yaml(yaml_string)
 
     print('loading weights......')
-    model.load_weights('../model/lstm_new.h5')
+    model.load_weights('../model/lstm_three.h5')
     model.compile(loss='binary_crossentropy',
                   optimizer='adam', metrics=['accuracy'])
     return model
@@ -181,8 +187,10 @@ def lstm_predict_single(string):
     data = input_transform(string)
     data.reshape(1, -1)
     result = model.predict_classes(data)
-    if result[0][0] == 1:
+    if result[0] == 1:
         print(string, ' positive')
+    elif result[0] == 0:
+        print(string, 'neural')
     else:
         print(string, ' negative')
 
@@ -198,9 +206,15 @@ def lstm_predict():
         data = input_transform(review_list[i])
         data.reshape(1,-1)
         result = model.predict_classes(data)
-        if result[0][0] == 1:
+        if result[0] == 1:
             if result_list[i] == 'positive':
                 print (review_list[i],' positive')
+            else:
+                wrong_ans += 1
+                wrong_list.append(review_list[i])
+        elif result[0] == 0:
+            if result_list[i] == 'neural':
+                print (review_list[i],' neural')
             else:
                 wrong_ans += 1
                 wrong_list.append(review_list[i])
@@ -216,6 +230,7 @@ def lstm_predict():
     print("accuracy: %f" % (accuracy))
 
 if __name__=='__main__':
-    # lstm_predict()
-    string = "肉时间长，不新鲜，味道差劲，不好吃，服务员告诉我说，套餐就这样，肉品差，要想吃新鲜肉，就得单独再点贵的"
-    lstm_predict_single(string)
+    lstm_predict()
+    # string = "书的质量还好，但是内容实在没意思。本以为会侧重心理方面的分析，但实际上是婚外恋内容。"
+    # lstm_predict_single(string)
+    # train()
