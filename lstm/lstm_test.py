@@ -42,39 +42,47 @@ def lstm_predict_single(string):
 
 def lstm_predict():
     model = load_model()
-    review_csv = pd.read_csv("../data/res_comment.csv", encoding='utf-8')
-    review_list = review_csv['text']
-    result_list = review_csv['sentiment']
+    path = "../data/"
+    file_list = ['neg.csv', 'neutral.csv', 'pos.csv']
     wrong_list = []
     wrong_ans = 0
-    for i in range(0, 100):
-        data = input_transform(review_list[i])
-        data.reshape(1,-1)
-        result = model.predict_classes(data)
-        if result[0] == 1:
-            if result_list[i] == 'positive':
-                print (review_list[i],' positive')
+    amount = 0
+    for file in file_list:
+        review_csv = pd.read_csv(path+file, encoding='utf-8')
+        length = len(review_csv)
+        head = 0.8*length
+        review_list = review_csv['text'][int(0.8*length):]
+        amount += length
+
+        for review in review_list:
+            data = input_transform(review)
+            data.reshape(1,-1)
+            result = model.predict_classes(data)
+            if result[0] == 1:
+                if file == 'pos.csv':
+                    print (review,' positive')
+                else:
+                    wrong_ans += 1
+                    wrong_list.append(review)
+            elif result[0] == 0:
+                if file == 'neutral.csv':
+                    print (review,' neutral')
+                else:
+                    wrong_ans += 1
+                    wrong_list.append(review)
             else:
-                wrong_ans += 1
-                wrong_list.append(review_list[i])
-        elif result[0] == 0:
-            if result_list[i] == 'neutral':
-                print (review_list[i],' neutral')
-            else:
-                wrong_ans += 1
-                wrong_list.append(review_list[i])
-        else:
-            if result_list[i] == 'negative':
-                print (review_list[i],' negative')
-            else:
-                wrong_ans += 1
-                wrong_list.append(review_list[i])
+                if file == 'neg.csv':
+                    print (review,' negative')
+                else:
+                    wrong_ans += 1
+                    wrong_list.append(review)
 
     print(wrong_list)
-    accuracy = (100-wrong_ans)/100
+    accuracy = (amount-wrong_ans)/amount
     print("accuracy: %f" % (accuracy))
 
+
 if __name__=='__main__':
-    # lstm_predict()
-    string = "书的质量还好，但是内容实在没意思。本以为会侧重心理方面的分析😂，但实际上是婚外恋内容。"
-    lstm_predict_single(string)
+    lstm_predict()
+    # string = "一般般，人很多，饭菜咸"
+    # lstm_predict_single(string)

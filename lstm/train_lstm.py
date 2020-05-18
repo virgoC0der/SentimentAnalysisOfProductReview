@@ -10,7 +10,6 @@ from keras.models import Sequential
 from keras.layers.embeddings import Embedding
 from keras.layers.recurrent import LSTM
 from keras.layers.core import Dense, Dropout,Activation
-from keras.models import model_from_yaml
 from keras.utils import to_categorical
 from review_treatment.review_pretreatment import *
 
@@ -27,7 +26,7 @@ n_iterations = 1  # ideally more..
 n_exposures = 10
 window_size = 7
 batch_size = 32
-n_epoch = 4
+n_epoch = 30
 input_length = 100
 cpu_count = multiprocessing.cpu_count()
 
