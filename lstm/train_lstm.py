@@ -37,7 +37,7 @@ def loadfile():
     pos=pd.read_csv('../data/pos.csv',header=None,index_col=None,error_bad_lines=False)
     neu=pd.read_csv('../data/neutral.csv', header=None, index_col=None)
 
-    combined=np.concatenate((pos[0], neg[0], neu[0]))
+    combined=np.concatenate((pos[0], neu[0], neg[0]))
     y = np.concatenate((np.ones(len(pos),dtype=int), np.zeros(len(neu), dtype=int), -1*np.ones(len(neg),dtype=int)))
 
     return combined,y
