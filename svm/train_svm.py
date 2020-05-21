@@ -10,23 +10,29 @@ import sys
 # reload(sys)
 # sys.setdefaultencoding('utf8')
 
+# 100 0.8149727552712628
+# 150 0.8137882018479033
+# 200 0.8097607202084814
+# 250 0.7995735607675906
+# 300 0.8045486851457001
+n_dim = 300
 
 # 加载文件，导入数据,分词
 def loadfile():
     neg=pd.read_csv('../data/neg.csv',header=None,index_col=None)
     pos=pd.read_csv('../data/pos.csv',header=None,index_col=None,error_bad_lines=False)
-    neu=pd.read_csv('../data/neutral.csv', header=None, index_col=None)
+
 
     cw = lambda x: list(jieba.cut(x))
     pos['words'] = pos[0].apply(cw)
     neg['words'] = neg[0].apply(cw)
-    neu['words'] = neu[0].apply(cw)
+
 
     # print pos['words']
     # use 1 for positive sentiment, 0 for negative
-    y = np.concatenate((np.ones(len(pos),dtype=int), np.zeros(len(neu), dtype=int), -1*np.ones(len(neg),dtype=int)))
+    y = np.concatenate((np.ones(len(pos),dtype=int), np.zeros(len(neg),dtype=int)))
 
-    x_train, x_test, y_train, y_test = train_test_split(np.concatenate((pos['words'], neu['words'], neg['words'])), y, test_size=0.2)
+    x_train, x_test, y_train, y_test = train_test_split(np.concatenate((pos['words'], neg['words'])), y, test_size=0.2)
 
     np.save('data/y_train.npy', y_train)
     np.save('data/y_test.npy', y_test)
@@ -50,7 +56,6 @@ def buildWordVector(text, size, imdb_w2v):
 
 # 计算词向量
 def get_train_vecs(x_train, x_test):
-    n_dim = 300
     # Initialize model and build vocab
     imdb_w2v = Word2Vec(size=n_dim, min_count=10)
     imdb_w2v.build_vocab(x_train)
@@ -91,7 +96,6 @@ def svm_train(train_vecs, y_train, test_vecs, y_test):
 
 ##得到待预测单个句子的词向量
 def get_predict_vecs(words):
-    n_dim = 300
     imdb_w2v = Word2Vec.load('model/w2v_model.pkl')
     # imdb_w2v.train(words)
     train_vecs = buildWordVector(words, n_dim, imdb_w2v)
@@ -110,20 +114,19 @@ def svm_predict(string):
 
     if int(result[0]) == 1:
         print(string, ' positive')
-    elif int(result[0]) == -1:
+    else:
         print(string, ' negative')
-    elif int(result[0]) == 0:
-        print(string, ' neutral')
+
 
 
 if __name__ == '__main__':
-    # #导入文件，处理保存为向量
-    #    x_train,x_test=loadfile() #得到句子分词后的结果，并把类别标签保存为y_train。npy,y_test.npy
-    #    get_train_vecs(x_train,x_test) #计算词向量并保存为train_vecs.npy,test_vecs.npy
-    #    train_vecs,y_train,test_vecs,y_test=get_data()#导入训练数据和测试数据
-    #    svm_train(train_vecs,y_train,test_vecs,y_test)#训练svm并保存模型
+    #导入文件，处理保存为向量
+    x_train,x_test=loadfile() #得到句子分词后的结果，并把类别标签保存为y_train。npy,y_test.npy
+    get_train_vecs(x_train,x_test) #计算词向量并保存为train_vecs.npy,test_vecs.npy
+    train_vecs,y_train,test_vecs,y_test=get_data()#导入训练数据和测试数据
+    svm_train(train_vecs,y_train,test_vecs,y_test)#训练svm并保存模型
 
     #对输入句子情感进行判断
     # string = '一般般吧'
-    string='牛逼的手机，从3米高的地方摔下去都没坏，质量非常好'
-    svm_predict(string)
+    # string='牛逼的手机，从3米高的地方摔下去都没坏，质量非常好'
+    # svm_predict(string)
