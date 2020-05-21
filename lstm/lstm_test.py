@@ -83,6 +83,6 @@ def lstm_predict():
 
 
 if __name__=='__main__':
-    lstm_predict()
-    # string = "一般般，人很多，饭菜咸"
-    # lstm_predict_single(string)
+    # lstm_predict()
+    string = "一般般，人很多，饭菜咸"
+    lstm_predict_single(string)
