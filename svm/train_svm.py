@@ -114,8 +114,10 @@ def svm_predict(string):
 
     if int(result[0]) == 1:
         print(string, ' positive')
+        return 'positive'
     else:
         print(string, ' negative')
+        return 'negative'
 
 
 

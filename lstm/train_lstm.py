@@ -104,8 +104,8 @@ def word2vec_train(combined):
 def get_data(index_dict,word_vectors,combined,y):
 
     n_symbols = len(index_dict) + 1                             # 所有单词的索引数，频数小于10的词语索引为0，所以加1
-    embedding_weights = np.zeros((n_symbols, vocab_dim))        #索引为0的词语，词向量全为0
-    for word, index in index_dict.items():                      #从索引为1的词语开始，对每个词语对应其词向量
+    embedding_weights = np.zeros((n_symbols, vocab_dim))        # 索引为0的词语，词向量全为0
+    for word, index in index_dict.items():                      # 从索引为1的词语开始，对每个词语对应其词向量
         embedding_weights[index, :] = word_vectors[word]
     print(combined)
     print(y)

@@ -34,10 +34,13 @@ def lstm_predict_single(string):
     result = model.predict_classes(data)
     if result[0] == 1:
         print(string, ' positive')
+        return 'positive'
     elif result[0] == 0:
         print(string, 'neutral')
+        return 'neutral'
     else:
         print(string, ' negative')
+        return 'negative'
 
 
 def lstm_predict():
@@ -50,7 +53,6 @@ def lstm_predict():
     for file in file_list:
         review_csv = pd.read_csv(path+file, encoding='utf-8')
         length = len(review_csv)
-        head = 0.8*length
         review_list = review_csv['text'][int(0.8*length):]
         amount += length
 
