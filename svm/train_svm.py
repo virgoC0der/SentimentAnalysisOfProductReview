@@ -15,7 +15,7 @@ import sys
 # 200 0.8097607202084814
 # 250 0.7995735607675906
 # 300 0.8045486851457001
-n_dim = 300
+n_dim = 100
 
 # 加载文件，导入数据,分词
 def loadfile():
@@ -70,7 +70,7 @@ def get_train_vecs(x_train, x_test):
     print(train_vecs.shape)
     # Train word2vec on test tweets
     imdb_w2v.train(x_test, total_examples=imdb_w2v.corpus_count, epochs=imdb_w2v.epochs)
-    imdb_w2v.save('model/w2v_model.pkl')
+    imdb_w2v.save('../svm_model/w2v_model.pkl')
     # Build test tweet vectors then scale
     test_vecs = np.concatenate([buildWordVector(z, n_dim, imdb_w2v) for z in x_test])
     # test_vecs = scale(test_vecs)
@@ -90,13 +90,13 @@ def get_data():
 def svm_train(train_vecs, y_train, test_vecs, y_test):
     clf = SVC(kernel='rbf', verbose=True)
     clf.fit(train_vecs, y_train)
-    joblib.dump(clf, 'model/model.pkl')
+    joblib.dump(clf, '../svm_model/model.pkl')
     print(clf.score(test_vecs, y_test))
 
 
 ##得到待预测单个句子的词向量
 def get_predict_vecs(words):
-    imdb_w2v = Word2Vec.load('model/w2v_model.pkl')
+    imdb_w2v = Word2Vec.load('../svm_model/w2v_model.pkl')
     # imdb_w2v.train(words)
     train_vecs = buildWordVector(words, n_dim, imdb_w2v)
     # print train_vecs.shape
@@ -107,7 +107,7 @@ def get_predict_vecs(words):
 def svm_predict(string):
     words = jieba.lcut(string)
     words_vecs = get_predict_vecs(words)
-    clf = joblib.load('model/model.pkl')
+    clf = joblib.load('../svm_model/model.pkl')
 
     result = clf.predict(words_vecs)
     print(result)
