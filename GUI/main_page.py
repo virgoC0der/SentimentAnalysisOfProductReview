@@ -1,6 +1,6 @@
 from tkinter import *
+from tkinter import ttk
 from lstm.lstm_test import lstm_predict_single
-from svm.train_svm import svm_predict
 
 
 class predict_gui():
@@ -8,44 +8,38 @@ class predict_gui():
         self.init_window_name = init_window_name
 
     def set_window(self):
-        self.init_window_name.title = ("评论文本情感分析")
-        self.init_window_name.geometry('1068x681+10+10')
+        self.init_window_name.title("评论文本情感分析")
 
-        self.var = StringVar()
-        self.var.set("请选择模型")
-        self.option_menu = OptionMenu(self.init_window_name, self.var, "LSTM", "SVM")
-        self.option_menu.grid(row=0, column=0)
-        self.option_menu.pack()
+        self.input_label = Label(self.init_window_name, text="请输入文本：")
+        self.input_label.grid(row=0, column=0, sticky=E)
 
-        self.input_label = Label(self.init_window_name, text="请输入文本")
-        self.input_label.grid(row=1, column=0)
-        self.input_label.pack()
+        self.input_text = Entry(self.init_window_name, width=30)
+        self.input_text.grid(row=0, column=1, sticky='nsew')
 
-        self.input_text = Entry(self.init_window_name, width=67)
-        self.input_text.grid(row=2, column=0, rowspan=10, columnspan=10)
-        self.input_text.pack()
+        self.result_label = Label(self.init_window_name, text="情感预测结果：")
+        self.result_label.grid(row=1, column=0, sticky=E)
 
         self.result_label = Label(self.init_window_name)
-        self.result_label.grid(row=2, column=12, rowspan=15, columnspan=10)
-        self.result_label.pack()
+        self.result_label.grid(row=1, column=1, sticky='nsew')
 
-        self.predict_button = Button(self.init_window_name, text="开始检测", width=10, bg='light blue', command=self.click_predict)
-        self.predict_button.grid(row=2, column=11)
-        self.predict_button.pack()
+        self.predict_button = ttk.Button(self.init_window_name, text="开始检测", command=self.click_predict)
+        self.predict_button.grid(row=3, column=0, rowspan=3)
 
-
+        self.delete_button = ttk.Button(self.init_window_name, text="删除", command=self.click_delete)
+        self.delete_button.grid(row=3, column=1, rowspan=3)
 
     def click_predict(self):
-        method = self.var.get()
         text = self.input_text.get()
-        result="请先选择模型"
-        if method=="LSTM":
+        if text=="":
+            result="请输入文本"
+        else:
             result = lstm_predict_single(text)
-            print(result)
-        if method=="SVM":
-            result = svm_predict(text)
-            print(result)
         self.result_label['text'] = result
+
+    def click_delete(self):
+        self.input_text.delete(0, END)
+        self.result_label['text'] = ""
+
 
 if __name__ == '__main__':
     init_window = Tk()
