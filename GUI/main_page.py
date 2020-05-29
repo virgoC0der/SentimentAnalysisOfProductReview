@@ -28,13 +28,13 @@ class predict_gui():
         self.var = StringVar(self.init_window_name)
         self.var.set('LSTM')
         self.model_select = ttk.OptionMenu(self.init_window_name, self.var, '', 'LSTM', 'SVM')
-        self.model_select.grid(row=2, column=0, columnspan=2)
+        self.model_select.grid(row=2, column=0)
 
         self.predict_button = ttk.Button(self.init_window_name, text="开始检测", command=self.click_predict)
-        self.predict_button.grid(row=3, column=0)
+        self.predict_button.grid(row=2, column=1)
 
         self.delete_button = ttk.Button(self.init_window_name, text="删除", command=self.click_delete)
-        self.delete_button.grid(row=3, column=1)
+        self.delete_button.grid(row=2, column=2)
 
     def click_predict(self):
         text = self.input_text.get()
