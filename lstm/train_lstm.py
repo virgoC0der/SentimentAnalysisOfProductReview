@@ -13,7 +13,7 @@ from keras.layers.core import Dense, Dropout,Activation
 from keras.utils import to_categorical
 from review_treatment.review_pretreatment import *
 
-np.random.seed(1337)  # For Reproducibility
+np.random.seed(1337)
 import jieba
 import pandas as pd
 import sys
