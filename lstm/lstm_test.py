@@ -15,7 +15,7 @@ def input_transform(string):
     _,_,combined=create_dictionaries(model,words)
     return combined
 
-def load_model():
+def load_model(): #加载模型
     print('loading model......')
     with open('../model/lstm.yml', 'r') as f:
         yaml_string = yaml.load(f)
