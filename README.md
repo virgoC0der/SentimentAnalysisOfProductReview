@@ -14,5 +14,3 @@
 
 ## 分类模型对比
 SVM vs LSTM
-
-## 如需论文请email联系，邮箱地址在[主页](https://github.com/shixuan163556)
