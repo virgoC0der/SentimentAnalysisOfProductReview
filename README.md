@@ -17,6 +17,10 @@
 ## 分类模型对比
 SVM vs LSTM
 
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=virgoC0der/SentimentAnalysisOfProductReview&type=date&legend=top-left)](https://www.star-history.com/#virgoC0der/SentimentAnalysisOfProductReview&type=date&legend=top-left)
+
 
 ## License
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FvirgoC0der%2FSentimentAnalysisOfProductReview.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2FvirgoC0der%2FSentimentAnalysisOfProductReview?ref=badge_large)
